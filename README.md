@@ -1,0 +1,40 @@
+# Cartesian Sort Algorithm
+
+This repository illustrates the core Cartesian sort procedure of the [SquareNet](https://github.com/ArmanddeCacqueray/SquareNet) gridification engine for demonstration purposes.
+
+It showcases the live progress of the multi-key Cartesian sorting algorithm and includes an animated GIF alongside the simple Python script used to generate it.
+
+## Algorithm (2D Version)
+
+*Note: The generalization to higher dimensions is straightforward.*
+
+**Initialization:**
+Take $N$ random Euclidean points (in this example, $N = 4225 = 65 \times 65$ points): $(x_k, y_k)_{1 \le k \le N}$.
+Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely random initialization): $k \leftrightarrow [i, j]_k$.
+
+**Iterative Sorting Procedure:**
+1. Sort the $x$-coordinate along the row key $i$: update $[i, j]_k \leftarrow [i', j]_k$ where $i'$ ensures the $x_k$ coordinates are sorted along the $i$-axis (all columns $j$ are processed in parallel).
+2. Sort the $y$-coordinate along the column key $j$: update $[i', j]_k \leftarrow [i', j']_k$.
+3. Check if the $x$-sorting was broken by applying the $y$-sorting step (which is highly probable). If so, return to step 1 and repeat until both dimensions are simultaneously satisfied.
+
+## Output
+
+The algorithm produces a **bijective mapping** from the raw points `RP` (shape `[4225, 2]`: $(x_k, y_k)$) to a gridded tensor `GT` (shape `[65, 65, 2]`: $(x_{ij}, y_{ij})$). 
+
+Upon termination, the resulting gridded view `GT` is guaranteed to be monotonic:
+* $x$ strictly increases along $i$ ($\rightarrow$)
+* $y$ strictly increases along $j$ ($\uparrow$)
+  This ensure that the multi key [i,j] is spatially coherent, and thus local neighborhood is roughhly preserved: nearest neigbor of point with multi key [i, j] probably got adjacent multi keys [i+-1, j+-1]
+  (thought a few < 95/99% outliers will unavoidably land at [i+-2, j+-2] or farther, thus leading to the 'robust' and 'ultimate' reffinement of the SquareNet gridifier)
+
+By construction, the transformation is a bijection between the raw point key $k$ and the grid multi-key $[i, j]$. This allows for seamless data transfer between the flat point list and the grid using simple fancy indexing operations.
+
+## Proof of Termination & Optimal Transport
+
+A notable aspect of this algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport.
+
+Based on the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/Rearrangement_inequality), each sorting step strictly decreases the following global structural quantity (average energy) on the `GT`:
+
+$$ \sum_{i,j} \left( (x_{ij} - i)^2 + (y_{ij} - j)^2 \right) $$
+
+This provides a solid monovariant guaranteeing that no cycles will occur, and thus, that the algorithm will mathematically terminate. In practical—and even adversarial—cases, no more than 100 total iterations are typically required.
