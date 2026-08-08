@@ -1,8 +1,8 @@
 # Cartesian Sort Algorithm
 
-This repository illustrates the core Cartesian sort procedure of the [SquareNet](https://github.com/ArmanddeCacqueray/SquareNet) gridification engine for demonstration purposes.
+This repository illustrates the core Cartesian sort procedure of the [SquareNet](https://github.com/ArmanddeCacqueray/SquareNet) ❒ gridification engine for demonstration purposes.
 
-It showcases the live progress of the multi-key Cartesian sorting algorithm and includes an animated GIF alongside the simple Python script used to generate it.
+It showcases the live progress of the multi-key Cartesian sorting algorithm 𝄜 and includes an animated GIF alongside the simple Python script used to generate it.
 
 ## Algorithm (2D Version)
 
@@ -21,7 +21,7 @@ Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely rando
 
 The algorithm produces a **bijective mapping** from the raw points `RP` (shape `[4225, 2]`: $(x_k, y_k)$) to a gridded tensor `GT` (shape `[65, 65, 2]`: $(x_{ij}, y_{ij})$). 
 
-Upon termination, the resulting gridded view `GT` is guaranteed to be monotonic:
+Upon termination, the resulting gridded view `GT` is guaranteed to be monotonic 📈 :
 * $x$ strictly increases along $i$ ($\rightarrow$)
 * $y$ strictly increases along $j$ ($\uparrow$)
 
