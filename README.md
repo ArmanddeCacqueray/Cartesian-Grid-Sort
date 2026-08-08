@@ -24,8 +24,8 @@ The algorithm produces a **bijective mapping** from the raw points `RP` (shape `
 Upon termination, the resulting gridded view `GT` is guaranteed to be monotonic:
 * $x$ strictly increases along $i$ ($\rightarrow$)
 * $y$ strictly increases along $j$ ($\uparrow$)
-  This ensure that the multi key [i,j] is spatially coherent, and thus local neighborhood is roughhly preserved: nearest neigbor of point with multi key [i, j] probably got adjacent multi keys [i+-1, j+-1]
-  (thought a few < 95/99% outliers will unavoidably land at [i+-2, j+-2] or farther, thus leading to the 'robust' and 'ultimate' reffinement of the SquareNet gridifier)
+
+This ensures that the multi-key $[i, j]$ is spatially coherent, meaning local neighborhoods are roughly preserved: the nearest spatial neighbors of a point with multi-key $[i, j]$ will likely have adjacent multi-keys $[i\pm1, j\pm1]$. Though a few outliers will unavoidably land at $[i\pm2, j\pm2]$ or further, this behavior motivates the "robust" and "ultimate" refinements implemented in the full SquareNet gridifier.
 
 By construction, the transformation is a bijection between the raw point key $k$ and the grid multi-key $[i, j]$. This allows for seamless data transfer between the flat point list and the grid using simple fancy indexing operations.
 
