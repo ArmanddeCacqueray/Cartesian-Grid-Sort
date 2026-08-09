@@ -5,18 +5,18 @@
 
 This repository illustrates the core cartesian grid sort procedure of the [`SquareNet`](https://github.com/ArmanddeCacqueray/SquareNet) ❒ gridification engine for demonstration purposes.
 
-It showcases the live progress of the multi-key cartesian grid sorting algorithm 𝄜 and includes an [animated GIF](https://github.com/ArmanddeCacqueray/Cartesian-Grid-Sort/blob/main/cartesian_sort.gif) alongside the simple Python script used to generate it.
+It showcases the live progress of the grid sorting algorithm 𝄜 and includes an [animated GIF](https://github.com/ArmanddeCacqueray/Cartesian-Grid-Sort/blob/main/cartesian_sort.gif) alongside the simple Python script used to generate it, as well as both the full python (slow, simple) and C++ implementation (optimized) of the cartesian grid sort.
 
 ## Usecase
 
-This repo complement the SquareNet gridification package with a clear presentation of it's core `Cartesian Grid Sort` algorithm that allow to sort arbitrary point cloud as a multi-dimensional grid. Cartesian sort algorithme is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)), which simply require to 
+This repo complement the SquareNet gridification package with a clear presentation of it's core `Cartesian Grid Sort` algorithm that allow to sort arbitrary point clouds as a multi-dimensional grid. Cartesian sort algorithm is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)), which simply require to 
 ```python
 pip install squarenet
 ```
 
 Regarding this auxiliar repository:
 - Run `main.py` to reproduce the quick visual animated demo
-- Feel free to look at what's inside `sort.py` (not optimized, illustration purpose) to fully understand how the algorithm work.
+- Feel free to look at what's inside `sort.py` (not optimized, simple illustration purpose) to fully understand how the algorithm work.
 - See `sort_core.cpp` for a C++ optimized version (multi-threaded).  
   It achieves **< 200 ms** on 1 million 2D points (tested on an old Ryzen 3 3250U). To reproduce the experiment:
 
