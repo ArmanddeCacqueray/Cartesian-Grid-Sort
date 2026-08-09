@@ -6,7 +6,7 @@ It showcases the live progress of the grid sorting algorithm 𝄜 and includes a
 
 ## Usecase
 
-This repo complement the SquareNet gridification package with a clear presentation of it's core `Cartesian Grid Sort` algorithm that allow to sort arbitrary point clouds as a multi-dimensional grid. Cartesian sort algorithm is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)), which simply require to 
+This repo present the `Cartesian Grid Sort` algorithm that allow to sort arbitrary point clouds as a multi-dimensional grid. Cartesian sort algorithm is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet gridficztion package itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)), which simply require to 
 ```python
 pip install squarenet
 ```
