@@ -71,8 +71,6 @@ $$ \sum_{i,j} \left( (x_{ij} - i)^2 + (y_{ij} - j)^2 \right) $$
 
 This provides a solid monovariant guaranteeing that no cycles will occur, and thus, that the algorithm will mathematically terminate. In practical—and even adversarial—cases, no more than 100 total iterations are typically required.
 
----
-
 <p align="center">
 <img src="cartesian_sort_illust.png" />
 </p>
