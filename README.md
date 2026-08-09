@@ -52,7 +52,7 @@ By construction, the transformation is a bijection between the raw point key $k$
 
 A notable aspect of this algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport (thought the cartesian sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minima).
 
-Based on the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/Rearrangement_inequality), each sorting step strictly decreases the following global structural quantity (average energy) on the `GT`:
+Based on the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/Rearrangement_inequality), each sorting step strictly decreases the following global structural quantity (average transport energy) on the `GT`:
 
 $$ \sum_{i,j} \left( (x_{ij} - i)^2 + (y_{ij} - j)^2 \right) $$
 
