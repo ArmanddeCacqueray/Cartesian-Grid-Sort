@@ -8,7 +8,7 @@ It showcases the live progress of the grid sorting algorithm 𝄜 and includes a
 
 ## Quick Start
 
-The `Cartesian Grid Sort` allow to structure arbitrary point clouds as a multi-dimensional grid. The algorithm is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet gridfication package itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb), or this [benchmark](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/benchmark/squarenet_benchmark_kdtree.ipynb) with kd-tree) which simply require to 
+The `Cartesian Grid Sort` allow to structure arbitrary point clouds as a multi-dimensional grid. The algorithm is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet gridfication package itself (see for exemple this [tutorial](https://github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb), or this [benchmark](https://github/ArmanddeCacqueray/SquareNet/blob/main/benchmark/squarenet_benchmark_kdtree.ipynb) with kd-tree) which simply require to 
 ```python
 pip install squarenet
 ```
