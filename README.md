@@ -3,20 +3,20 @@
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)
 [![HF demo](https://img.shields.io/badge/🤗%20Open%20in%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/adec314/point-to-grid)
 
-This repository illustrates the core cartesian grid sort procedure of the `SquareNet` ❒ gridification engine for demonstration purposes.
+This repository illustrates the core cartesian grid sort procedure of the [`SquareNet`](https://github.com/ArmanddeCacqueray/SquareNet) ❒ gridification engine for demonstration purposes.
 
 It showcases the live progress of the multi-key cartesian grid sorting algorithm 𝄜 and includes an [animated GIF](https://github.com/ArmanddeCacqueray/Cartesian-Grid-Sort/blob/main/cartesian_sort.gif) alongside the simple Python script used to generate it.
 
 ## Usecase
 
-This repo aim to support the [SquareNet](https://github.com/ArmanddeCacqueray/SquareNet) engine (see link) to illustrate it's core gridification process. Note that to use SquareNet itself, one simply need to
+This repo complement the SquareNet gridification package with a clear presentation of it's core `Cartesian Grid Sort` algorithm that allow to sort arbitrary point cloud as a multi-dimensional grid. Cartesian sort algorithme is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)), which simply require to 
 ```python
 pip install squarenet
 ```
 
 Regarding this auxiliar repository:
 - Run `main.py` to reproduce the quick visual animated demo
-- Feel free to look at what's inside `sort.py` (not optimized, demonstration purpose) to see how the algorithm work.
+- Feel free to look at what's inside `sort.py` (not optimized, illustration purpose) to fully understand how the algorithm work.
 - See `sort_core.cpp` for a C++ optimized version (multi-threaded).  
   It achieves **< 200 ms** on 1 million 2D points (tested on an old Ryzen 3 3250U). To reproduce the experiment:
 
