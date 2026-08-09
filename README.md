@@ -37,13 +37,16 @@ clang++ -O3 -fopenmp -std=c++17 sort_core.cpp -o sort_core
 *Note: The generalization to higher dimensions is straightforward.*
 
 **Initialization:**
-Take $N$ random Euclidean points (in the main animation example, $N = 4225 = M^2 = 65 \times 65$ points). If N is not an even square, apply padding with dummy points that will fall in empty slots of the grid to complete $N$ to the nearest square $M^2$: 
+Take the  $N$ arbitrary Euclidean points to be processed:
 
 $$ (x_k, y_k)_{1 \le k \le N} $$
 
+In the main animation example, $N = 4225 = M^2 = 65 \times 65$ points). If N is not an even square, apply padding with dummy points that will fall in empty slots of the grid to complete $N$ to the nearest square:
+$$ N \leftarrow M^2 $$ 
+
 Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely random initialization): 
 
-$$ k \leftrightarrow [i, j]_k $$
+$$ k \leftrightarrow [i, j]_k \quad i,j \in 1,2,3,..., M $$
 $$ (x_k, y_k)_{1 \le k \le N}\leftrightarrow (x_{ij}, y_{ij})_{1 \le i,j \le M} $$
 
 **Iterative Sorting Procedure:**
