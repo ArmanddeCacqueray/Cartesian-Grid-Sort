@@ -20,7 +20,7 @@ pip install squarenet.
 Regarding this auxiliar repository:
 - Run `main.py` to reproduce the quick visual animated demo
 - Feel free to look at what's inside `sort.py` (not optimized, demonstration purpose) to see how the algorithm work.
-- See sort_core.cppp for a c++ optimized version, including multi threading, provided for user interested in high performance. It achieve **< 200 ms runtime** (full cartesian sort process) on 1 million 2D points on my old personal laptop (AMD Ryzen 3 3250U / 2 cores, 4 threads).
+- See `sort_core.cpp` for a c++ optimized version, including multi threading, provided for user interested in high performance. It achieve **< 200 ms runtime** (full cartesian sort process) on 1 million 2D points on my old personal laptop (AMD Ryzen 3 3250U / 2 cores, 4 threads).
 
 
 ## Algorithm (2D Version)
