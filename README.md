@@ -8,7 +8,7 @@
 
 This repository illustrates the core cartesian grid sort procedure of the `SquareNet` ❒ gridification engine for demonstration purposes.
 
-It showcases the live progress of the multi-key cartesian grid sorting algorithm 𝄜 and includes an [animated GIF](https://github.com/ArmanddeCacqueray/blob/main/cartesian_sort.gif) alongside the simple Python script used to generate it.
+It showcases the live progress of the multi-key cartesian grid sorting algorithm 𝄜 and includes an [animated GIF](https://github.com/ArmanddeCacqueray/Cartesian-Grid-Sort/blob/main/cartesian_sort.gif) alongside the simple Python script used to generate it.
 
 ## Usecase
 
