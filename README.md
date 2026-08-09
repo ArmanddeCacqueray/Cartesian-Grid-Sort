@@ -52,8 +52,8 @@ $$ k \leftrightarrow [i, j]_k \quad i,j \in 1,2,3,..., M $$
 $$ (x_k, y_k) \leftrightarrow (x_{ij}, y_{ij}) $$
 
 **Iterative Sorting Procedure:**
-1. Sort the Points according to their $x$-coordinate along the row key $i$: update $[i, j]_k \leftarrow [i', j]_k$ where $i'$ ensures the $x_k$ coordinates are sorted along the $i$-axis (all columns $j$ are processed in parallel).
-2. Sort the Points according to their $y$-coordinate along the column key $j$: update $[i', j]_k \leftarrow [i', j']_k$.
+1. Sort the Points according to their $x$-coordinate along the row key $i$: update $[i, j] \leftarrow [i', j]$ where $i'$ ensures the $x_ij$ coordinates are sorted along the $i$-axis (all columns $j$ are processed in parallel).
+2. Sort the Points according to their $y$-coordinate along the column key $j$: update $[i, j] \leftarrow [i, j']$ to ensure monotonic y coordinate.
 3. Check if the $x$-sorting was broken by applying the $y$-sorting step (which is highly probable). If so, return to step 1 and repeat until both dimensions are simultaneously satisfied.
 
 ## Output
