@@ -51,13 +51,13 @@ Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely rando
 
 ## Output
 
-The algorithm produces a **bijective mapping** from the raw points `RP` (shape `[4225, 2]`: $(x_k, y_k)$) to a gridded tensor `GT` (shape `[65, 65, 2]`: $(x_{ij}, y_{ij})$). 
+The algorithm produces a **bijective mapping** from the raw points `RP` (shape `[4225, 2]`: $(x_k, y_k)$ ) to a gridded tensor `GT` (shape `[65, 65, 2]`: $(x_{ij}, y_{ij})$ ). 
 
 Upon termination, the resulting gridded view `GT` is guaranteed to be monotonic 📈 :
 * $x$ strictly increases along $i$ ($\rightarrow$)
 * $y$ strictly increases along $j$ ($\uparrow$)
 
-This ensures that the multi-key $[i, j]$ is spatially coherent, meaning local neighborhoods are roughly preserved: the nearest spatial neighbors of a point with multi-key $[i, j]$ will likely have adjacent multi-keys $[i\pm1, j\pm1]$. Though a few outliers will unavoidably land at $[i\pm2, j\pm2]$ or further, this behavior motivates the "robust" and "ultimate" refinements implemented in the full SquareNet gridifier.
+This ensures that the multi-key $[i, j]$ is spatially coherent, meaning local neighborhoods are roughly preserved: the nearest spatial neighbors of a point with multi-key $[i, j]$ will likely have adjacent multi-keys $[i\pm1, j\pm1]$. Though a few outliers will unavoidably land at $[i\pm2, j\pm2]$ or further.
 
 By construction, the transformation is a bijection between the raw point key $k$ and the grid multi-key $[i, j]$. This allows for seamless data transfer between the flat point list and the grid using simple fancy indexing operations.
 
@@ -85,10 +85,10 @@ The idea of Cartesian grid sort is simple: loop over 1D Cartesian projections of
 
 - **Speed.** ⏱️ Millions of points in seconds. All operations are native tensor ops.
 - **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enable potential N-dimensional dychotomy principle for certain algorithms.
-- **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map, `method='fast'`):
+- **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map):
   - Requesting a 11×11 square window ([i-5:i+6, j-5:j+6] = 0.01% of candidates) → recovers ~97% of true nearest neighbors
   - Requesting a 31×31 square window ([i-15:i+16, j-15:j+16] = 0.1% of candidates) → recovers ~99.5%
-- **Volume conservation.** Bijectivity naturally leads to conservation of volumes (or more generally measures: $\int \rho(x)\, dV$ when density rho is not constant in the point cloud). By conservation of volume, it is **not** mean that $$\mathrm{vol}(g(A), g(B), g(C)) = \mathrm{vol}(A, B, C)$$ where $ABC$ is a triangle, since the image of a triangle is generally not a triangle anymore.
+- **Volume conservation (at macroscopic scale).** Bijectivity naturally leads to conservation of volumes (or more generally measures: $\int \rho(x)\, dV$ when density rho is not constant in the point cloud). By conservation of volume, it is **not** mean that $$\mathrm{vol}(g(A), g(B), g(C)) = \mathrm{vol}(A, B, C)$$ where $ABC$ is a triangle, since the image of a triangle is generally not a triangle anymore.
 It would be equal to $$\mathrm{vol}(\Omega),\qquad \Omega = \{ g(X) \mid X \in ABC \}$$
 
 **What you don't get:**
