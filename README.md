@@ -86,17 +86,18 @@ This provides a solid monovariant guaranteeing that no cycles will occur, and th
 
 ## Take home
 
-The idea of Cartesian grid sort is simple: loop over 1D Cartesian projections of the point cloud (x, y, z, ...) and sort points along the corresponding grid axis (rows, columns, ...). Each 1D sort is O(N log N) and fully vectorized. Since sorting along axis i+1 partially undoes the ordering along axis i, you repeat the full loop until all axes are sorted simultaneously — typically fewer than 50 iterations.
+The idea of Cartesian grid sort, in the general case with a D dimensional point cloud, is simple: loop over 1D Cartesian projections of the point cloud (x, y, z, ...) and sort points along the corresponding grid axis (rows, columns, etc). Each 1D sort is O(N log N) and fully vectorized. Since sorting along one axis partially undoes the ordering along previous axes, you repeat the full sorting loop until all axes are sorted simultaneously — typically fewer than 50 iterations.
 
 **What you get:**
 
 - **Speed.** ⏱️ Millions of points in seconds. All operations are native tensor ops.
-- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enable potential N-dimensional dychotomy principle for certain algorithms.
-- **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map):
-  - Requesting a 11×11 square window ([i-5:i+6, j-5:j+6] = 0.01% of candidates) → recovers ~97% of true nearest neighbors
+- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enable e.g. the generalised searchsorted query tool of SquareNet for nearest neighbor search, and additional dichotomy principles for algorithms that exploit the grid structure.
+  
+- **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map distribution):
+  - Requesting a 11×11 square window  arround a query point [i,j]: [i-5:i+6, j-5:j+6] = 0.01% of candidates → recovers ~97% of the nearest neighbors
   - Requesting a 31×31 square window ([i-15:i+16, j-15:j+16] = 0.1% of candidates) → recovers ~99.5%
-- **Volume conservation (at macroscopic scale).** Bijectivity naturally leads to conservation of volumes (or more generally measures: $\int \rho(x)\, dV$ when density rho is not constant in the point cloud). By conservation of volume, it is **not** mean that $$\mathrm{vol}(g(A), g(B), g(C)) = \mathrm{vol}(A, B, C)$$ where $ABC$ is a triangle, since the image of a triangle is generally not a triangle anymore.
-It would be equal to $$\mathrm{vol}(\Omega),\qquad \Omega = \{ g(X) \mid X \in ABC \}$$
+- **Volume conservation**, at macroscopic scale, of the identification mapping $g: (i,j,…) \leftrightarrow (x,y,…)_{ij…}$ Bijectivity naturally leads to conservation of  latent macroscopic volumes if the density of the point cloud is constant. By conservation of volume, it is **not** mean that $$\mathrm{vol}(g(A)g(B)g(C)) = \mathrm{vol}(ABC)$$ where $ABC$ is a triangle of 3 multi-indexes since the image of a triangle by g is generally not a triangle anymore.
+For constant density datasets, $$\mathrm{vol}(ABC) will be - approximately - equal to $$\mathrm{vol}(\Omega),\qquad \Omega = \{g(X) \mid X \in ABC \}$$
 
 **What you don't get:**
 
