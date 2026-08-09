@@ -37,8 +37,8 @@ clang++ -O3 -fopenmp -std=c++17 sort_core.cpp -o sort_core
 *Note: The generalization to higher dimensions is straightforward.*
 
 **Initialization:**
-Take $N$ random Euclidean points (in the main animation example, $N = 4225 = 65 \times 65$ points): $(x_k, y_k)_{1 \le k \le N}$.
-Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely random initialization): $k \leftrightarrow [i, j]_k$ and  $(x_k, y_k) \leftrightarrow (x_{ij}, y_{ij})$ .
+Take $N$ random Euclidean points (in the main animation example, $N = 4225 = 65 \times 65$ points): $(x_{k}, y_{k})_{1 \le k \le N}$.
+Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely random initialization): $k \leftrightarrow [i, j]_{k}$ and $(x_{k}, y_{k}) \leftrightarrow (x_{ij}, y_{ij})$.
 
 **Iterative Sorting Procedure:**
 1. Sort the $x$-coordinate along the row key $i$: update $[i, j]_k \leftarrow [i', j]_k$ where $i'$ ensures the $x_k$ coordinates are sorted along the $i$-axis (all columns $j$ are processed in parallel).
