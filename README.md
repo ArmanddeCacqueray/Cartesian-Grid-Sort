@@ -20,11 +20,11 @@ pip install squarenet.
 Regarding this auxiliar repository:
 - Run `main.py` to reproduce the quick visual animated demo
 - Feel free to look at what's inside `sort.py` (not optimized, demonstration purpose) to see how the algorithm work.
-- See `sort_core.cpp` for a c++ optimized version, including multi threading, provided for user interested in high performance. It achieve **< 200 ms runtime** (full cartesian grid sort process) on 1 million 2D points on my old personal laptop (Windows 11, AMD Ryzen 3 3250U, 2 cores/ 4 threads). To reproduce that:
+- See `sort_core.cpp` for a c++ optimized version, including multi threading, provided for user interested in high performance. It achieve **< 200 ms runtime** (full cartesian grid sort process) on 1 million 2D points on my old personal laptop (Windows 11, AMD Ryzen 3 3250U, 2 cores/ 4 threads). To reproduce that on Windows:
 
 ```PowerShell
-cl /O2 /openmp /EHsc /std:c++17 sort_core.cpp #build (for Windows)
-.\sort_core.exe #run
+cl /O2 /openmp /EHsc /std:c++17 sort_core.cpp 
+.\sort_core.exe 
 ```
 
 
