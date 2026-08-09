@@ -48,9 +48,9 @@ This ensures that the multi-key $[i, j]$ is spatially coherent, meaning local ne
 
 By construction, the transformation is a bijection between the raw point key $k$ and the grid multi-key $[i, j]$. This allows for seamless data transfer between the flat point list and the grid using simple fancy indexing operations.
 
-## Proof of Termination & Optimal Transport
+## Proof of Termination & link to Optimal Transport
 
-A notable aspect of this algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport.
+A notable aspect of this algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport (thought the cartesian sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minima).
 
 Based on the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/Rearrangement_inequality), each sorting step strictly decreases the following global structural quantity (average energy) on the `GT`:
 
