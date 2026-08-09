@@ -53,7 +53,7 @@ def cartesian_sort(
     xy: NDArray, max_iter: int = 100
 ) -> Tuple[NDArray, NDArray, NDArray, NDArray]:
     """
-    Gridify a 2D point cloud using the Cartesian Sort algorithm.
+    Gridify a 2D point cloud using the Cartesian Grid Sort algorithm.
 
     Iteratively sorts columns by X coordinates and rows by Y coordinates
     until convergence (disorder == 0) or until `max_iter` is reached.
@@ -69,18 +69,19 @@ def cartesian_sort(
         Tuple[NDArray, NDArray, NDArray, NDArray]:
             - xy: Original point cloud of shape (N, 2).
             - k: Original flat index array of shape (N,) - natural ordering 0...N-1.
-            - XY: Gridified 3D array of shape (GRID, GRID, 2) where XY[I, J]
-                  gives (x, y) of point k.
-            - IJ: 2D index array of shape (GRID, GRID) mapping grid positions
+            - XY: Gridified array of shape (GRID, GRID, 2) where XY[I, J]
+                  gives (x, y)[k].
+            - IJ: Index array of shape (GRID, GRID) mapping grid positions
                   [I, J] back to original point indices k.
 
     Note:
-        The algorithm is guaranteed to converge - and quickly in practice - because
-        the following Transport Metric is a monovariant of the system until convergence:
-            Sum_i,j { (X[i, j] - i)^2 + (Y[i, j] - j)^2 }
+        The algorithm is guaranteed to converge - and quickly in practice - because the 
+        following Transport Metric is a monovariant energy of the system until convergence:
+            Sum_I,J { (X[I, J] - I)^2 + (Y[I, J] - J)^2 }
     """
-    n = len(xy)
-    k = np.arange(n, dtype=np.int32)
+    n = len(xy) #here n should be equal to GRID^2.
+    #Else apply padding with dummy +-infinite xy points.
+    k = np.arange(n)
 
     # Initial random grid permutation IJ
     IJ = np.random.permutation(k).reshape(GRID, GRID)
@@ -117,11 +118,13 @@ def cartesian_sort(
 if __name__ == "__main__":
     np.random.seed(42)
 
+    n = GRID * GRID
+
     # Generate a random point cloud
-    xy = np.random.rand(GRID * GRID, 2)
+    xy = np.random.rand(n, 2)
 
     # Initial disorder
-    k = np.arange(len(xy), dtype=np.int32)
+    k = np.arange(n)
     IJ = np.random.permutation(k).reshape(GRID, GRID)
 
     print(f"Cloud shape: {xy.shape}")
