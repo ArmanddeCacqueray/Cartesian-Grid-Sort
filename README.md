@@ -42,12 +42,14 @@ Take the  $N$ arbitrary Euclidean points to be processed:
 $$ (x_k, y_k)_{1 \le k \le N} $$
 
 In the main animation example, $N = 4225 = M^2 = 65 \times 65$ points). If N is not an even square, apply padding with dummy points that will fall in empty slots of the grid to complete $N$ to the nearest square:
+
 $$ N \leftarrow M^2 $$ 
 
 Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely random initialization): 
 
 $$ k \leftrightarrow [i, j]_k \quad i,j \in 1,2,3,..., M $$
-$$ (x_k, y_k)_{1 \le k \le N}\leftrightarrow (x_{ij}, y_{ij})_{1 \le i,j \le M} $$
+
+$$ (x_k, y_k) \leftrightarrow (x_{ij}, y_{ij}) $$
 
 **Iterative Sorting Procedure:**
 1. Sort the $x$-coordinate along the row key $i$: update $[i, j]_k \leftarrow [i', j]_k$ where $i'$ ensures the $x_k$ coordinates are sorted along the $i$-axis (all columns $j$ are processed in parallel).
