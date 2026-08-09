@@ -6,14 +6,22 @@
 [![GitHub](https://img.shields.io/badge/GitHub-Source-6f42c1?logo=github)](https://github.com/ArmanddeCacqueray/SquareNet)
 [![HF demo](https://img.shields.io/badge/🤗%20Open%20in%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/adec314/point-to-grid)
 
-This repository illustrates the core Cartesian sort procedure of the [SquareNet](https://github.com/ArmanddeCacqueray/SquareNet) ❒ gridification engine for demonstration purposes.
+This repository illustrates the core Cartesian sort procedure of the `SquareNet` ❒ gridification engine for demonstration purposes.
 
 It showcases the live progress of the multi-key Cartesian sorting algorithm 𝄜 and includes an animated GIF alongside the simple Python script used to generate it.
 
 ## Usecase
 
-Run `main.py` to reproduce the quick visual animated demo, and feel free to look at what's inside `sort.py` to see how the algorithm work.
-The .py version is thought as a demonstration toy model and is not optimized. A c++ optimized version, including multi threading, is provided for user interested in high performance, which achieve **< 200 ms runtime** (full cartesian sort process) on 1 million 2D points on my old personal laptop (AMD Ryzen 3 3250U / 2 cores, 4 threads)  - see 'sort_core.cpp'.
+This repo aim to support the [SquareNet](https://github.com/ArmanddeCacqueray/SquareNet) engine (see link) to illustrate it's core gridification process. Note that to use SquareNet itself, one simply need to
+```python
+pip install squarenet.
+```
+
+Regarding this particular repository:
+- Run `main.py` to reproduce the quick visual animated demo
+- Feel free to look at what's inside `sort.py` (not optimized, demonstration purpose) to see how the algorithm work.
+- See sort_core.cppp for a c++ optimized version, including multi threading, provided for user interested in high performance. It achieve **< 200 ms runtime** (full cartesian sort process) on 1 million 2D points on my old personal laptop (AMD Ryzen 3 3250U / 2 cores, 4 threads).
+
 
 ## Algorithm (2D Version)
 
