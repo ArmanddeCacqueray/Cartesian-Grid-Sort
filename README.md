@@ -1,5 +1,6 @@
 # Cartesian Grid Sort Algorithm
 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)
 [![HF demo](https://img.shields.io/badge/🤗%20Open%20in%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/adec314/point-to-grid)
 
 This repository illustrates the core cartesian grid sort procedure of the `SquareNet` ❒ gridification engine for demonstration purposes.
