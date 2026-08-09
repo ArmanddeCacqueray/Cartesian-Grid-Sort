@@ -14,7 +14,7 @@ It showcases the live progress of the multi-key cartesian grid sorting algorithm
 
 This repo aim to support the [SquareNet](https://github.com/ArmanddeCacqueray/SquareNet) engine (see link) to illustrate it's core gridification process. Note that to use SquareNet itself, one simply need to
 ```python
-pip install squarenet.
+pip install squarenet
 ```
 
 Regarding this auxiliar repository:
@@ -51,7 +51,7 @@ Randomly split the flat key $k$ into a 2D multi-key to form a grid (purely rando
 
 ## Output
 
-The algorithm produces a **bijective mapping** from the raw points `RP` (shape `[4225, 2]`: $(x_k, y_k)$ ) to a gridded tensor `GT` (shape `[65, 65, 2]`: $(x_{ij}, y_{ij})$ ). 
+The algorithm produces a **bijective mapping** from the raw points `RP`, shape `[4225, 2]`: $(x_k, y_k)$ to a gridded tensor `GT`, shape `[65, 65, 2]`: $(x_{ij}, y_{ij})$. 
 
 Upon termination, the resulting gridded view `GT` is guaranteed to be monotonic 📈 :
 * $x$ strictly increases along $i$ ($\rightarrow$)
