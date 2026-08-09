@@ -12,7 +12,7 @@ It showcases the live progress of the multi-key Cartesian sorting algorithm 𝄜
 
 ## Usecase
 
-Run `main.py` for a quick visual animated demo, and feel free to look at what's inside `sort.py` to see how the algorithm work.
+Run `main.py` to reproduce the quick visual animated demo, and feel free to look at what's inside `sort.py` to see how the algorithm work.
 The .py version is thought as a demonstration toy model and is not optimized. A c++ optimized version, including multi threading, is provided for user interested in high performance, which achieve **< 200 ms runtime** (full cartesian sort process) on 1 million 2D points on my old personal laptop (AMD Ryzen 3 3250U / 2 cores, 4 threads)  - see 'sort_core.cpp'.
 
 ## Algorithm (2D Version)
