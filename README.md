@@ -41,7 +41,7 @@ Take the  $N$ arbitrary Euclidean points to be processed:
 
 $$ (x_k, y_k)_{1 \le k \le N} $$
 
-In the main animation example, $N = 4225 = M^2 = 65 \times 65$ points. If N is not an even square, apply padding with dummy points that will fall in empty slots of the grid to complete $N$ to the nearest square:
+In the main animation example, $N = 4225 = M^2 = 65 \times 65$ points. If N is not an even square, apply padding with dummy $\pm \infty$ points that will fall in empty slots of the grid to complete $N$ to the nearest square:
 
 $$ N \leftarrow M^2 $$ 
 
