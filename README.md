@@ -1,4 +1,4 @@
-# Cartesian Sort Algorithm
+# Cartesian Grid Sort Algorithm
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)
 [![PyPI version](https://img.shields.io/pypi/v/squarenet.svg)](https://pypi.org/project/squarenet/)
@@ -6,9 +6,9 @@
 [![GitHub](https://img.shields.io/badge/GitHub-Source-6f42c1?logo=github)](https://github.com/ArmanddeCacqueray/SquareNet)
 [![HF demo](https://img.shields.io/badge/🤗%20Open%20in%20Hugging%20Face-Spaces-yellow)](https://huggingface.co/spaces/adec314/point-to-grid)
 
-This repository illustrates the core Cartesian sort procedure of the `SquareNet` ❒ gridification engine for demonstration purposes.
+This repository illustrates the core cartesian grid sort procedure of the `SquareNet` ❒ gridification engine for demonstration purposes.
 
-It showcases the live progress of the multi-key Cartesian sorting algorithm 𝄜 and includes an animated GIF alongside the simple Python script used to generate it.
+It showcases the live progress of the multi-key cartesian grid sorting algorithm 𝄜 and includes an animated GIF alongside the simple Python script used to generate it.
 
 ## Usecase
 
@@ -20,7 +20,7 @@ pip install squarenet.
 Regarding this auxiliar repository:
 - Run `main.py` to reproduce the quick visual animated demo
 - Feel free to look at what's inside `sort.py` (not optimized, demonstration purpose) to see how the algorithm work.
-- See `sort_core.cpp` for a c++ optimized version, including multi threading, provided for user interested in high performance. It achieve **< 200 ms runtime** (full cartesian sort process) on 1 million 2D points on my old personal laptop (AMD Ryzen 3 3250U / 2 cores, 4 threads).
+- See `sort_core.cpp` for a c++ optimized version, including multi threading, provided for user interested in high performance. It achieve **< 200 ms runtime** (full cartesian grid sort process) on 1 million 2D points on my old personal laptop (AMD Ryzen 3 3250U / 2 cores, 4 threads).
 
 
 ## Algorithm (2D Version)
@@ -50,7 +50,7 @@ By construction, the transformation is a bijection between the raw point key $k$
 
 ## Proof of Termination & link to Optimal Transport
 
-A notable aspect of this algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport (thought the cartesian sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minima).
+A notable aspect of this algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport (thought the cartesian grid sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minima).
 
 Based on the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/Rearrangement_inequality), each sorting step strictly decreases the following global structural quantity (average transport energy) on the `GT`:
 
