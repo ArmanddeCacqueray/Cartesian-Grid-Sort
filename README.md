@@ -70,7 +70,7 @@ By construction, the transformation is a bijective assignement between the raw p
 
 ## Proof of Termination & link to Optimal Transport
 
-A notable aspect of this algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport (thought the cartesian grid sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minima).
+A notable aspect of `Cartesian Grid Sort` algorithm is its proof of termination, which is relatively simple and establishes a link to Optimal Transport (thought the cartesian grid sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minima).
 
 Based on the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/Rearrangement_inequality), each sorting step strictly decreases the following global structural quantity (average transport energy) on the `GT`:
 
