@@ -55,7 +55,7 @@ Upon termination, the resulting gridded view `GT` is guaranteed to be monotonic 
 
 This ensures that the multi-key $[i, j]$ is spatially coherent, meaning local neighborhoods are roughly preserved: the nearest spatial neighbors of a point with multi-key $[i, j]$ will likely have adjacent multi-keys $[i\pm1, j\pm1]$. Though a few outliers will unavoidably land at $[i\pm2, j\pm2]$ or further.
 
-By construction, the transformation is a bijection between the raw point key $k$ and the grid multi-key $[i, j]$. This allows for seamless data transfer between the flat point list and the grid using simple fancy indexing operations.
+By construction, the transformation is a bijective assignement between the raw point key $k$ and the grid multi-key $[i, j]$. This allows for seamless data transfer between the flat point list and the grid using simple fancy indexing operations.
 
 ## Proof of Termination & link to Optimal Transport
 
