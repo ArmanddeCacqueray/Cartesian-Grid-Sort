@@ -6,13 +6,13 @@ It showcases the live progress of the grid sorting algorithm 𝄜 and includes a
 
 ## Usecase
 
-This repo present the `Cartesian Grid Sort` algorithm that allow to sort arbitrary point clouds as a multi-dimensional grid. Cartesian sort algorithm is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet gridficztion package itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)), which simply require to 
+The `Cartesian Grid Sort` allow to structure arbitrary point clouds as a multi-dimensional grid. The algorithm is quite simple once one get the main idea and could be reused in various contexts were a spatially coherent multi index structure can be usefull. Note that end user should rather refer to SquareNet gridficztion package itself (see for exemple this [tutorial](https://colab.research.google.com/github/ArmanddeCacqueray/SquareNet/blob/main/00_getting_started.ipynb)), which simply require to 
 ```python
 pip install squarenet
 ```
 
 Regarding this auxiliar repository:
-- Run `main.py` to reproduce the quick visual animated demo
+- Run `main.py` to reproduce the quick visual animated demo that showcase gridification in progress.
 - Feel free to look at what's inside `sort.py` (not optimized, simple illustration purpose) to fully understand how the algorithm work.
 - See `sort_core.cpp` for a C++ optimized version (multi-threaded).  
   It achieves **< 200 ms** on 1 million 2D points (tested on an old Ryzen 3 3250U). To reproduce the experiment:
