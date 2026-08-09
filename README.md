@@ -8,7 +8,7 @@
 
 This repository illustrates the core cartesian grid sort procedure of the `SquareNet` ❒ gridification engine for demonstration purposes.
 
-It showcases the live progress of the multi-key cartesian grid sorting algorithm 𝄜 and includes an animated GIF alongside the simple Python script used to generate it.
+It showcases the live progress of the multi-key cartesian grid sorting algorithm 𝄜 and includes an [animated GIF](https://github.com/ArmanddeCacqueray/blob/main/cartesian_sort.gif) alongside the simple Python script used to generate it.
 
 ## Usecase
 
@@ -70,6 +70,12 @@ Based on the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/
 $$ \sum_{i,j} \left( (x_{ij} - i)^2 + (y_{ij} - j)^2 \right) $$
 
 This provides a solid monovariant guaranteeing that no cycles will occur, and thus, that the algorithm will mathematically terminate. In practical—and even adversarial—cases, no more than 100 total iterations are typically required.
+
+---
+
+<p align="center">
+<img src="cartesian_sort_illust.png" />
+</p>
 
 ---
 
