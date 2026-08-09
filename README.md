@@ -88,19 +88,18 @@ This provides a solid monovariant guaranteeing that no cycles will occur, and th
 
 The idea of `Cartesian grid sort`, in the general case with a D dimensional point cloud, is simple: loop over 1D Cartesian projections of the point cloud (x, y, z, ...) and sort points along the corresponding grid axis (rows, columns, etc). Each 1D sort is O(N log N). Since sorting along one axis partially undoes the ordering along previous axes, you repeat the full sorting loop until all axes are sorted simultaneously — typically fewer than 50 iterations.
 
-**What you get:**
-
-- **Speed.** ⏱️ Millions of points in seconds. All operations are native tensor ops.
-- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enable e.g. the generalised searchsorted query tool of `SquareNet` for nearest neighbor search, and additional dichotomy principles for algorithms that exploit the grid structure.
-  
-- **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map distribution):
-  - Requesting a 11×11 square window  arround a query point [i,j]: [i-5:i+6, j-5:j+6] = 0.01% of candidates → recovers ~97% of the physicall nearest neighbors
-  - Requesting a 31×31 square window ([i-15:i+16, j-15:j+16] = 0.1% of candidates) → recovers ~99.5%
-- **Volume conservation**, at macroscopic scale, of the identification mapping $g: (i,j,…) \leftrightarrow (x,y,…)_{ij…}$ Bijectivity naturally leads to conservation of  latent macroscopic volumes if the density of the point cloud is constant. By conservation of volume, it is **not** mean that $$\mathrm{vol}(g(A)g(B)g(C)) = \mathrm{vol}(ABC)$$ where $ABC$ is a triangle of 3 multi-indexes since the image of a triangle by g is generally not a triangle anymore.
-For constant density datasets, $$\mathrm{vol}(ABC) will be - approximately - equal to $$\mathrm{vol}(\Omega),\qquad \Omega = \{g(X) \mid X \in ABC \}$$
-
 **What you don't get:**
 
 - **Optimal Transport.** `Cartesian Grid Sort` trades exactness for speed. If you need the provably optimal assignment, this isn't the right tool.
 - **Reverse neighborhood preservation.** Close in space → close in grid, but *not* the other way around. Holes, clusters, and gaps in your data will be "closed" by the grid, which can place unrelated points next to each other.
 - **Angular preservation.** Volume and angles can't both be conserved in the general case (classical result). Expect some distortion, especially near boundaries.
+
+**What you get:**
+
+- **Speed.** ⏱️ Millions of points in seconds. All operations are native tensor ops.
+- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enable e.g. the generalised searchsorted query tool of `SquareNet` for nearest neighbor search, and additional dichotomy principles for algorithms that exploit the grid structure. 
+- **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map distribution):
+  - Requesting a 11×11 square window  arround a query point [i,j]: [i-5:i+6, j-5:j+6] = 0.01% of candidates → recovers ~97% of the physicall nearest neighbors
+  - Requesting a 31×31 square window ([i-15:i+16, j-15:j+16] = 0.1% of candidates) → recovers ~99.5%
+- **Volume conservation**, at macroscopic scale, of the identification mapping $g: (i,j,…) \leftrightarrow (x,y,…)_{ij…}$ Bijectivity naturally leads to conservation of  latent macroscopic volumes if the density of the point cloud is constant. By conservation of volume, it is **not** mean that $$\mathrm{vol}(g(A)g(B)g(C)) = \mathrm{vol}(ABC)$$ where $ABC$ is a triangle of 3 multi-indexes since the image of a triangle by g is generally not a triangle anymore.
+For constant density datasets, $$\mathrm{vol}(ABC) $$ will be - approximately - equal to $$\mathrm{vol}(\Omega),\qquad \Omega = \{g(X) \mid X \in ABC \}$$
