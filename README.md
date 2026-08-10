@@ -86,6 +86,12 @@ This provides a solid monovariant guaranteeing that no cycles will occur, and th
 <img src="cartesian_sort_illust.png" />
 </p>
 
+## Grid versus tree & link to KDTree
+
+Their is an interessting parallel to do between the data structure that `Cartesian Grid Sort` produce (a spatially coherent, monotonic multi index) and standard `KDTree` data structure. In fact, in cases were N is an exact power of 2, the Kd-tree recursive  partitioning path of each point of the cloud (left - bottom - left - up - right - ...) can directly be converted to a [i, j] multi-index, and it turn out that the corresponding grid $ (x_{ij}, y_{ij}) $ will already be sorted by construction of the tree (x coordinate increasing along i and y coordinate along j). Notably, the construction of the kdtree and the cartesian sort grid have sensibly the same runtime (see benchmark mentioned in Quick Start section).
+
+The main difference between KDTree and Cartesian Grid Sort is the paradigm. KDTree is coarse to fine and threshold based (left/right, bottom/up)  while Cartesian Grid Sort is purely linear (i/i+1, j/j+1), with row / column axes progressively following the local structure of the point cloud without strong discontinuities. What will realy make a difference is the context were the data structure is used: if e.g. one is interested for the neighbors of a single target, KDTree is probably the best choice. If one need the neighbors of all the points, e.g. to apply a Convolution Neural Network on a geometric dataset, Cartesian Grid Sort offer simple interface between efficient tensor based frameworks and unstructured point clouds.
+
 ---
 
 ## Take home
@@ -101,7 +107,7 @@ The idea of `Cartesian grid sort`, in the general case with a D dimensional poin
 **What you get:**
 
 - **Speed.** ⏱️ Millions of points in seconds. All operations are native tensor ops.
-- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enable e.g. the generalised searchsorted query tool of `SquareNet` for nearest neighbor search, and additional dichotomy principles for algorithms that exploit the grid structure. 
+- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enable e.g. the generalised searchsorted query tool of `SquareNet` for nearest neighbor search. 
 - **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map distribution):
   - Requesting a 11×11 square window  arround a query point [i,j]: [i-5:i+6, j-5:j+6] = 0.01% of candidates → recovers ~97% of the physicall nearest neighbors
   - Requesting a 31×31 square window ([i-15:i+16, j-15:j+16] = 0.1% of candidates) → recovers ~99.5%
