@@ -9,18 +9,20 @@ GRID = 65
 def sort_columns(gridmap: NDArray, xy: NDArray) -> NDArray:
     """Sort each column of `gridmap` by the X coordinate of its points."""
     out = gridmap.copy()
+    x = xy[:, 0]
     for j in range(GRID):
         col = out[:, j]
-        out[:, j] = col[np.argsort(xy[col, 0])]
+        out[:, j] = col[np.argsort(x[col])]
     return out
 
 
 def sort_rows(gridmap: NDArray, xy: NDArray) -> NDArray:
     """Sort each row of `gridmap` by the Y coordinate of its points."""
     out = gridmap.copy()
+    y = xy[:, 1]
     for i in range(GRID):
         row = out[i, :]
-        out[i, :] = row[np.argsort(xy[row, 1])]
+        out[i, :] = row[np.argsort(y[row])]
     return out
 
 
