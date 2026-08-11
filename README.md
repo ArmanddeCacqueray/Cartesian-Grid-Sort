@@ -101,7 +101,7 @@ The idea of `Cartesian grid sort`, in the general case with a D dimensional poin
 **What you don't get:**
 
 - **Optimal Transport.** `Cartesian Grid Sort` trades exactness for speed. If you need the provably optimal assignment, this isn't the right tool.
-- **Reverse neighborhood preservation.** Close in space → close in grid, but *not* the other way around. Holes, clusters, and gaps in your data will be "closed" by the grid, which can place unrelated points next to each other.
+- **Reverse neighborhood.** Close in space → close in grid, but *not* the other way around. Holes, clusters, and gaps in your data will be "closed" by the grid, which can place unrelated points next to each other.
 - **Angular preservation.** Volume and angles can't both be conserved in the general case (classical result). Expect some angular distortion, especially near boundaries.
 
 **What you get:**
