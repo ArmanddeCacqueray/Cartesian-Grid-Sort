@@ -96,7 +96,7 @@ The main difference between KDTree and Cartesian Grid Sort is the paradigm. KDTr
 
 ## Take home
 
-The idea of `Cartesian grid sort`, in the general case with a D dimensional point cloud, is simple: loop over 1D Cartesian projections of the point cloud (x, y, z, ...) and sort points along the corresponding grid axis (rows, columns, etc). Each 1D sort is O(N log N). Since sorting along one axis partially undoes the ordering along previous axes, you repeat the full sorting loop until all axes are sorted simultaneously — typically fewer than 50 iterations.
+The idea of `Cartesian grid sort` is simple: loop over 1D Cartesian projections of the point cloud (x, y, z, ...) and sort points along the corresponding grid axis (rows, columns, etc). Each 1D sort is O(N log N). Since sorting along one axis partially undoes the ordering along previous axes, you repeat the full sorting loop until all axes are sorted simultaneously — typically fewer than 50 iterations.
 
 **What you don't get:**
 
