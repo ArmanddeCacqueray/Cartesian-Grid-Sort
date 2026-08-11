@@ -107,7 +107,7 @@ The idea of `Cartesian grid sort`, in the general case with a D dimensional poin
 **What you get:**
 
 - **Speed.** ⏱️ Millions of points in seconds. All operations are native tensor ops.
-- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enables e.g. the generalised searchsorted query tool of `SquareNet` for nearest neighbor search. 
-- **Approximate neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map distribution):
+- **Coordinate monotonicity.** x increases along rows, y along columns, etc. This enables e.g. the generalised searchsorted query tool of `SquareNet` for approximate nearest neighbor search. 
+- **Neighborhood preservation.** Points close in space land close in the grid. Concrete experimental results on a 1M-point 2D dataset (France map distribution):
   - Requesting a 11×11 square window  arround a query point [i,j]: [i-5:i+6, j-5:j+6] = 0.01% of candidates → recovers ~97% of the physical nearest neighbors
   - Requesting a 31×31 square window ([i-15:i+16, j-15:j+16] = 0.1% of candidates) → recovers ~99.5%
