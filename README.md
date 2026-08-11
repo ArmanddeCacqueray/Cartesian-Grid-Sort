@@ -102,7 +102,7 @@ The idea of `Cartesian grid sort` is simple: loop over 1D Cartesian projections 
 
 - **Optimal Transport.** `Cartesian Grid Sort` trades exactness for speed. If you need the provably optimal assignment, this isn't the right tool.
 - **Reverse neighborhood.** Close in space → close in grid, but *not* the other way around. Holes, clusters, and gaps in your data will be "closed" by the grid, which can place unrelated points next to each other.
-- **Angular preservation.** Volume and angles can't both be conserved in the general case (classical result). Expect some angular distortion, especially near boundaries.
+- **Angular preservation.** Volume and angles can't both be conserved in the general case by a mapping (classical result). Expect some angular distortion, especially near boundaries.
 
 **What you get:**
 
