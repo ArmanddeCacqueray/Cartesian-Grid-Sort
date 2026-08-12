@@ -4,6 +4,11 @@ This repository illustrates the core cartesian grid sort procedure of the [`Squa
 
 It showcases the live progress of the grid sorting algorithm 𝄜 and includes an [animated GIF](https://github.com/ArmanddeCacqueray/Cartesian-Grid-Sort/blob/main/cartesian_sort.gif) alongside the simple Python script used to generate it, as well as both the full python (slow, simple) and C++ implementation (optimized) of the cartesian grid sort.
 
+
+<p align="center">
+<img src="cartesian_sort_illust.png" />
+</p>
+
 <p align="center">
 <img src="cartesian_sort_illust2.png" />
 </p>
@@ -81,10 +86,6 @@ In fact, Cartesian Grid Sort can be seen as a collective Coordinate Descent appl
 $$ \sum_{i,j} \left( (x_{ij} - i)^2 + (y_{ij} - j)^2 \right) $$
 
 This provides a solid monovariant guaranteeing that no cycles will occur, and thus, that the algorithm will mathematically terminate. In practical—and even adversarial—cases, no more than 100 total iterations are typically required.
-
-<p align="center">
-<img src="cartesian_sort_illust.png" />
-</p>
 
 ## Grid versus tree & link to KDTree
 
