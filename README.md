@@ -87,7 +87,7 @@ The axis-monotonic criterion allows to sort point cloud with a simple and fast a
 - up-left sort
 - down left sort
 
-The full optimization step is repeated unutil convergence. The up-left sort will make $x+y$ increasing on upleft levels (i-j = cst) and the down-left sort will make $x-y^$ increasing on downleft levels. Diagonal improvement makes the overal runtime of the algorithm roughly 5 times slower, but ensures a "stronger" monotony of the resulting grid, which is not only monotonic on the natural axes of the grid, but also on the diagonals. 
+The full optimization step is repeated unutil convergence. The up-left sort will make $x+y$ increasing on upleft levels (i-j = cst) and the down-left sort will make $x-y$ increasing on downleft levels. Diagonal improvement makes the overal runtime of the algorithm roughly 5 times slower, but ensures a "stronger" monotony of the resulting grid, which is not only monotonic on the natural axes of the grid, but also on the diagonals. 
 
 ## Proof of Termination & link to Optimal Transport
 
