@@ -84,7 +84,7 @@ In fact, Cartesian Grid Sort can be seen as a collective Coordinate Descent appl
 
 $$ \sum_{i,j} \left( (x_{ij} - i)^2 + (y_{ij} - j)^2 \right) $$
 
-This provides a solid monovariant guaranteeing that no cycles will occur, and thus, that the algorithm will mathematically terminate. In practical—and even adversarial—cases, no more than 100 total iterations are typically required.
+The transport energy of the grid is therefore a monovariant, garanteeing mathematicall termination of the algorithm because no cycle can occur. In practical—and even adversarial—cases, no more than 100 total iterations are typically required.
 
 ## Grid versus tree & link to KDTree
 
