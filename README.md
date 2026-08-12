@@ -40,6 +40,9 @@ clang++ -O3 -fopenmp -std=c++17 sort_core.cpp -o sort_core
 ./sort_core
 ```
 
+- See `sort_core_diagonal.cpp` for the generalised cartesian sort algorithm (including diagonal sort).
+roughly 5 times slower than the basic approach, but improves the resulting grid.
+
 ## Algorithm (2D Version)
 
 *Note: The generalization to higher dimensions is straightforward.*
@@ -76,9 +79,19 @@ This ensures that the multi-key $[i, j]$ is spatially coherent, meaning local ne
 
 By construction, the transformation is a bijective assignment between the raw point key $k$ and the grid multi-key $[i, j]$. This allows for seamless data transfer between the flat point list and the grid using simple fancy indexing operations.
 
+## Generalized Cartesian Sort - Diagonal improvement
+
+The axis-monotonic criterion allows to sort point cloud with a simple and fast axis based procedure. But this basic version can be enhanced with diagonal 1D sort. Diagonal (`up-left` / `down-left`) 1D sorts works exactly as the row / column 1D steps, besides that they are applyed on diagonal levels of the grid. An optimization step of the generalized cartesian algorithm is thus:
+- row sort
+- column sort
+- up-left sort
+- down left sort
+
+The full optimization step is repeated unutil convergence. The up-left sort will make $x+y$ increasing on upleft levels (i-j = cst) and the down-left sort will make $x-y^$ increasing on downleft levels. Diagonal improvement makes the overal runtime of the algorithm roughly 5 times slower, but ensures a "stronger" monotony of the resulting grid, which is not only monotonic on the natural axes of the grid, but also on the diagonals. 
+
 ## Proof of Termination & link to Optimal Transport
 
-A notable aspect of the `Cartesian Grid Sort` algorithm is its proof of termination, which is relatively simple and establishes a link to `Optimal Transport` 🚙 (though the cartesian grid sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minimum). 
+A notable aspect of the `Cartesian Grid Sort` (both basic and generalized) algorithm is its proof of termination, which is relatively simple and establishes a link to `Optimal Transport` 🚙 (though the cartesian grid sort algorithm doesn't provide exact optimal transport but greedy and fast convergence to a good local minimum). 
 
 In fact, Cartesian Grid Sort can be seen as a collective Coordinate Descent applyied on the Optimal Transport loss. Bue to the classical [Rearrangement Inequality](https://en.wikipedia.org/wiki/Rearrangement_inequality), each sorting step freezes all axes of the grid but one and solves the corresponding one-dimentional subproblem, making following quantity  (total transport energy of the grid) decreasing:
 

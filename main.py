@@ -1,172 +1,205 @@
-"""
-Cartesian Sort — Animated 2D Visualization
-===========================================
+from sort import point_dtype, compute_ot_loss, count_inversions, is_monotone
+from sort import sort_rows, sort_columns, sort_diagonals, sort_antidiagonals
 
-Generates an animated GIF showing the Cartesian Sort algorithm
-(from the SquareNet library) gridifying a 65×65 point cloud in real time.
+import io
+import time
 
-See https://github.com/ArmanddeCacqueray/Cartesian-Sort/blob/main/sort.py
-for the detailed cartesian sort algorithm
-"""
-
-import os
-
+import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 
-import sample
-import sort
-import viz
-
-# ──────────────────────────────────────────────────────────────────
-# Configuration
-# ──────────────────────────────────────────────────────────────────
-
-GRID         = 65          # grid is GRID x GRID
-N            = GRID * GRID # total number of points
-MAX_ITER     = 60          # safety cap on sorting iterations
-SEED         = 7           # reproducibility
-
-FPS          = 15
-MS           = int(1000 / FPS)   # ms per frame
-
-INTERP_STEPS = 6           # interpolation frames between two sort states
-PAUSE_INIT   = 3           # seconds to hold on the initial frame
-PAUSE_END    = 4           # seconds to hold on the final frame
-
-BG           = "#0a0a14"   # background color
-PT_SIZE      = 5           # scatter point size (pts^2)
-OUT          = "cartesian_sort.gif"
-
-np.random.seed(SEED)
-
-# ──────────────────────────────────────────────────────────────────
-# Point cloud & Visualization linking
-# ──────────────────────────────────────────────────────────────────
-
-points = sample.make_cloud(N, SEED)
-viz.points = points
-
-# ──────────────────────────────────────────────────────────────────
-# Cartesian Sort execution
-# ──────────────────────────────────────────────────────────────────
-
-flat = np.arange(N, dtype=np.int32)
-np.random.shuffle(flat)
-gridmap = flat.reshape(GRID, GRID)
-
-key_states = []
+from squarenet import SquareNet
 
 
-def snap(gm: np.ndarray, label: str) -> None:
-    key_states.append((gm.copy(), label))
+# ---------------------------------------------------------------------------
+# Visualisation
+# ---------------------------------------------------------------------------
+
+def render_frame(grid: np.ndarray) -> Image.Image:
+    """Render the current grid state to a PIL Image."""
+
+    sn = SquareNet(gridshape=grid.shape)
+    sn.pointsmaped = np.stack([grid["x"], grid["y"]], axis=-1)
+
+    fig, _ = sn.plot(
+        style="mesh",
+        mesh_long_edge=10,
+        save=False,
+        show=False,
+    )
+
+    buf = io.BytesIO()
+    fig.savefig(
+        buf,
+        format="png",
+        bbox_inches="tight",
+        dpi=120,
+    )
+    buf.seek(0)
+
+    image = Image.open(buf).convert("RGB").copy()
+
+    plt.close(fig)
+    buf.close()
+
+    return image
 
 
-snap(gridmap, "Initial state — unsorted points")
+def show_final(grid: np.ndarray) -> None:
+    """Display the final grid state interactively."""
 
-n_iter = 0
-for n_iter in range(MAX_ITER):
-    gm1 = sort.sort_columns(gridmap, points)
-    snap(gm1, f"Iter {n_iter + 1} · Sorting columns (X axis ->)")
-    gm2 = sort.sort_rows(gm1, points)
-    snap(gm2, f"Iter {n_iter + 1} · Sorting rows    (Y axis ^)")
-    gridmap = gm2
-    if sort.disorder(gridmap, points) == 0:
-        break
+    sn = SquareNet(gridshape=grid.shape)
+    sn.pointsmaped = np.stack([grid["x"], grid["y"]], axis=-1)
 
-snap(gridmap, f"Perfectly sorted — {n_iter + 1} iterations")
-print(f"Final disorder : {sort.disorder(gridmap, points)}")
-print(f"Key states     : {len(key_states)}")
-
-# ──────────────────────────────────────────────────────────────────
-# Assemble frames
-# ──────────────────────────────────────────────────────────────────
-
-pil_frames = []
-frame_durs = []
-total_steps = len(key_states) - 1
+    sn.neighbormap()
+    sn.plot(
+        style="mesh",
+        mesh_long_edge=10,
+        save=False,
+        show=True,
+    )
 
 
-def add_frame(img: Image.Image, ms: int) -> None:
-    pil_frames.append(img)
-    frame_durs.append(ms)
+def save_gif(frames, filename="cartesian_sort.gif", duration=1000):
+    """Save PIL frames directly as an animated GIF.
+
+    Parameters
+    ----------
+    frames : list[PIL.Image.Image]
+        Animation frames.
+    filename : str
+        Output GIF filename.
+    duration : int
+        Duration of each frame in milliseconds.
+    """
+
+    if not frames:
+        return
+
+    frames[0].save(
+        filename,
+        format="GIF",
+        save_all=True,
+        append_images=frames[1:],
+        duration=duration,
+        loop=0,
+        optimize=False,
+    )
 
 
-print("Rendering frames...")
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
 
-for k, (gm_cur, lbl) in enumerate(key_states):
-    dis  = sort.disorder(gm_cur, points)
-    prog = k / max(1, total_steps)
+def main():
 
-    if k == 0:
-        pos = points[gm_cur.ravel()].reshape(GRID, GRID, 2)
-        img = viz.render_frame(pos, lbl, dis, prog)
-        for _ in range(int(PAUSE_INIT * FPS)):
-            add_frame(img, MS)
-        print(f"  [0/{total_steps}] {lbl}  (initial pause)")
-        continue
+    # ── Configuration ────────────────────────────────────────────────────────
+    DATASET      = "holy" #more datasets available ("france", "germany", "holy", "ball", "spiky"...)
+    DYNAMIC_PLOT = True
+    N            = 65
+    MAX_ITER     = 1000
 
-    gm_prev, _ = key_states[k - 1]
-    dis_prev   = sort.disorder(gm_prev, points)
+    # ─────────────────────────────────────────────────────────────────────────
 
-    # Smooth interpolation between previous and current state
-    for step in range(INTERP_STEPS + 1):
-        t      = step / INTERP_STEPS
-        t_ease = t * t * (3.0 - 2.0 * t)   # smoothstep
-        pos    = viz.interp_positions(gm_prev, gm_cur, t_ease)
-        dis_i  = int(dis_prev + t * (dis - dis_prev))
-        prog_i = (k - 1 + t) / total_steps
-        add_frame(viz.render_frame(pos, lbl, dis_i, prog_i), MS)
+    # Sample N² points and reshape into an N×N structured array
+    from squarenet.sampler import samplepoints
 
-    print(f"  [{k}/{total_steps}] {lbl}")
+    pts = samplepoints(
+        method=DATASET,
+        size=(N**2, 2),
+        plot_points=False,
+    )
 
-# Hold on the final sorted state
-pos_f = points[key_states[-1][0].ravel()].reshape(GRID, GRID, 2)
-img_f = viz.render_frame(pos_f, key_states[-1][1], 0, 1.0)
-for _ in range(int(PAUSE_END * FPS)):
-    add_frame(img_f, MS)
+    pts = pts.reshape(N, N, 2)
 
-print(f"\nTotal frames : {len(pil_frames)}")
-print(f"Duration     : {sum(frame_durs) / 1000:.1f}s")
+    grid = np.empty((N, N), dtype=point_dtype)
+    grid["x"] = pts[:, :, 0]
+    grid["y"] = pts[:, :, 1]
 
-# ──────────────────────────────────────────────────────────────────
-# Export GIF  (raw -> quantized)
-# ──────────────────────────────────────────────────────────────────
+    # ── Optimisation loop ───────────────────────────────────────────────────
 
-print(f"Saving {OUT}...")
-pil_frames[0].save(
-    OUT,
-    save_all=True,
-    append_images=pil_frames[1:],
-    duration=frame_durs,
-    loop=0,
-    optimize=False,
-)
-print(f"  Raw size   : {os.path.getsize(OUT) / 1e6:.1f} MB")
+    loss_history = [
+        compute_ot_loss(grid, N)
+    ]
 
-# Re-encode with color quantization to shrink the file
-gif      = Image.open(OUT)
-q_frames = []
-q_durs   = []
-try:
-    while True:
-        q_frames.append(
-            gif.copy().convert("RGB").quantize(
-                colors=220, method=Image.Quantize.MEDIANCUT
-            )
+    inversion_history = [
+        count_inversions(grid, N)
+    ]
+
+    frames = []
+
+    def update_gif(grid, frames, gif_it):
+            # Capture the resulting state.
+            if DYNAMIC_PLOT and (gif_it <= 20 or (gif_it <= 80 & gif_it %  4 == 0) or gif_it % 12 == 0):
+                frames.append(render_frame(grid))
+            gif_it += 1
+            return gif_it
+
+    gif_it = update_gif(grid, frames, 0)
+
+    start = time.perf_counter()
+    iteration = 0
+
+    while iteration < MAX_ITER and not is_monotone(grid, N):
+        # One full pass: four directional sorts
+        sort_rows(grid, N)
+        gif_it = update_gif(grid, frames, gif_it)
+        sort_columns(grid, N)
+        gif_it = update_gif(grid, frames, gif_it)
+        sort_diagonals(grid, N)
+        gif_it = update_gif(grid, frames, gif_it)
+        sort_antidiagonals(grid, N)
+        gif_it = update_gif(grid, frames, gif_it)
+
+        iteration += 1
+
+        loss_history.append(
+            compute_ot_loss(grid, N)
         )
-        q_durs.append(gif.info.get("duration", MS))
-        gif.seek(gif.tell() + 1)
-except EOFError:
-    pass
 
-q_frames[0].save(
-    OUT,
-    save_all=True,
-    append_images=q_frames[1:],
-    duration=q_durs,
-    loop=0,
-    optimize=True,
-)
-print(f"  Optimized : {os.path.getsize(OUT) / 1e6:.1f} MB")
-print("Done!")
+        inversion_history.append(
+            count_inversions(grid, N)
+        )
+
+    elapsed_ms = (time.perf_counter() - start) * 1_000
+
+    # ── Results ──────────────────────────────────────────────────────────────
+
+    print(f"Iterations    : {iteration}")
+    print(f"Runtime (ms)  : {elapsed_ms:.1f}")
+    print(
+        f"Monotone      : "
+        f"{'yes' if is_monotone(grid, N) else 'no'}"
+    )
+
+    print(f"\n{'Iter':>6}  {'Inversions':>12}  {'OT Loss':>14}")
+    print("-" * 38)
+
+    for i, (inv, loss) in enumerate(
+        zip(inversion_history, loss_history)
+    ):
+        print(
+            f"{i:>6}  "
+            f"{inv:>12}  "
+            f"{loss:>14.3f}"
+        )
+
+    # ── Output ───────────────────────────────────────────────────────────────
+
+    if DYNAMIC_PLOT and frames:
+
+        save_gif(
+            frames,
+            filename="sort.gif",
+            duration=500,
+        )
+
+        print(
+            "\nAnimation saved → cartesian_sort.gif"
+        )
+
+    show_final(grid)
+
+
+if __name__ == "__main__":
+    main()

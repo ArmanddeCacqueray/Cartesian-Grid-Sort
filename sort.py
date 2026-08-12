@@ -1,144 +1,218 @@
-import time
+"""
+Cartesian Sort — Monotone Grid Optimization via Directional Sorting
+====================================================================
+
+This script arranges N² points (sampled from a geographic or synthetic
+dataset) into an N×N grid such that the assignment is "monotone" in all
+directions simultaneously:
+
+Base algorithm
+    - Rows      : x increases left → right
+    - Columns   : y increases top  → bottom
+
+Diagonal extension: Base algorithm +
+    - Diagonals : (x + y) increases along each ↗ diagonal
+    - Anti-diag : (x - y) decreases along each ↘ diagonal
+
+The algorithm iterates the directional sort passes until the grid is
+fully monotone (zero inversions) or a maximum iteration count is reached.
+
+As the total transport energy:
+
+         (x_ij -i)^2 + (y_ij -j)^2 of the grid
+         
+is a strict monovariant of the algorithm, it is garanted not to cycle, 
+and thus to converge in a finit number of iterations because only
+a finite number of configurations is possible.
+"""
 import numpy as np
-from numpy.typing import NDArray
-from typing import Tuple
 
-GRID = 65
+# ---------------------------------------------------------------------------
+# SORT method: with or without (base cartesian grid sort) diagonal swaps 
+# ---------------------------------------------------------------------------
 
-
-def sort_columns(gridmap: NDArray, xy: NDArray) -> NDArray:
-    """Sort each column of `gridmap` by the X coordinate of its points."""
-    out = gridmap.copy()
-    x = xy[:, 0]
-    for j in range(GRID):
-        col = out[:, j]
-        out[:, j] = col[np.argsort(x[col])]
-    return out
+WITH_DIAG = True #if True, row/column sort algorithm is enhanced with 
+# diagonal procedure (better but slower). Feel free to compare both 
+# by setting WITH_DIAG = True/False
 
 
-def sort_rows(gridmap: NDArray, xy: NDArray) -> NDArray:
-    """Sort each row of `gridmap` by the Y coordinate of its points."""
-    out = gridmap.copy()
-    y = xy[:, 1]
-    for i in range(GRID):
-        row = out[i, :]
-        out[i, :] = row[np.argsort(y[row])]
-    return out
+# ---------------------------------------------------------------------------
+# Data type
+# ---------------------------------------------------------------------------
+
+point_dtype = np.dtype([
+    ("x",  np.float64),
+    ("y",  np.float64),
+    ("id", np.int32),
+])
 
 
-def disorder(gridmap: NDArray, xy: NDArray) -> int:
-    """Count adjacent inversions along both axes (disorder metric)."""
-    d = 0
-    for i in range(GRID):
-        for j in range(GRID):
-            if i < GRID - 1:
-                d += xy[gridmap[i, j], 0] > xy[gridmap[i + 1, j], 0]
-            if j < GRID - 1:
-                d += xy[gridmap[i, j], 1] > xy[gridmap[i, j + 1], 1]
-    return int(d)
+# ---------------------------------------------------------------------------
+# Directional sort passes
+# ---------------------------------------------------------------------------
+
+def sort_rows(grid: np.ndarray, N: int) -> None:
+    """Sort each row by x-coordinate (ascending)."""
+    for i in range(N):
+        order = np.argsort(grid[i]["x"])
+        grid[i] = grid[i][order]
 
 
-def check_bijective(k: NDArray, IJ: NDArray) -> bool:
-    """Sanity check (optional): Check that `IJ` contains each point index exactly once."""
-    return np.array_equal(np.sort(IJ.ravel()), k)
+def sort_columns(grid: np.ndarray, N: int) -> None:
+    """Sort each column by y-coordinate (ascending)."""
+    for j in range(N):
+        order = np.argsort(grid[:, j]["y"])
+        grid[:, j] = grid[:, j][order]
 
 
-def check_monotone(XY: NDArray) -> Tuple[bool, bool]:
-    """Sanity check (optional): Check monotonicity of X along rows and Y along columns."""
-    X, Y = XY[:, :, 0], XY[:, :, 1]
-    monotone_X = np.all(np.diff(X, axis=0) >= 0)
-    monotone_Y = np.all(np.diff(Y, axis=1) >= 0)
-    return monotone_X, monotone_Y
+def sort_diagonals(grid: np.ndarray, N: int) -> None:
+    """Sort each ↗ diagonal (i − j = const) by (x + y) ascending."""
+    for d in range(-(N - 1), N):
+        rows = np.arange(N)
+        cols = rows - d
+        mask = (cols >= 0) & (cols < N)
+        r, c = rows[mask], cols[mask]
+        if r.size <= 1:
+            continue
+        pts = grid[r, c]
+        order = np.argsort(pts["x"] + pts["y"])
+        grid[r, c] = pts[order]
 
 
-def cartesian_sort(
-    xy: NDArray, max_iter: int = 100
-) -> Tuple[NDArray, NDArray, NDArray, NDArray]:
+def sort_antidiagonals(grid: np.ndarray, N: int) -> None:
+    """Sort each ↘ anti-diagonal (i + j = const) by (x − y) descending."""
+    for s in range(2 * (N - 1) + 1):
+        rows = np.arange(N)
+        cols = s - rows
+        mask = (cols >= 0) & (cols < N)
+        r, c = rows[mask], cols[mask]
+        if r.size <= 1:
+            continue
+        pts = grid[r, c]
+        order = np.argsort(-(pts["x"] - pts["y"]))   # descending
+        grid[r, c] = pts[order]
+
+
+# ---------------------------------------------------------------------------
+# Quality metrics
+# ---------------------------------------------------------------------------
+
+def is_monotone(grid: np.ndarray, N: int) -> bool:
+    """Return True when all four monotonicity conditions are satisfied."""
+
+    # Rows: x must be non-decreasing left → right
+    if np.any(grid[:, 1:]["x"] < grid[:, :-1]["x"]):
+        return False
+
+    # Columns: y must be non-decreasing top → bottom
+    if np.any(grid[1:, :]["y"] < grid[:-1, :]["y"]):
+        return False
+    
+    if WITH_DIAG:
+        # ↗ Diagonals: (x + y) must be non-decreasing
+        for d in range(-(N - 1), N):
+            rows = np.arange(N)
+            cols = rows - d
+            mask = (cols >= 0) & (cols < N)
+            r, c = rows[mask], cols[mask]
+            vals = grid[r, c]["x"] + grid[r, c]["y"]
+            if np.any(vals[1:] < vals[:-1]):
+                return False
+
+        # ↘ Anti-diagonals: (x − y) must be non-increasing
+        for s in range(2 * (N - 1) + 1):
+            rows = np.arange(N)
+            cols = s - rows
+            mask = (cols >= 0) & (cols < N)
+            r, c = rows[mask], cols[mask]
+            vals = grid[r, c]["x"] - grid[r, c]["y"]
+            if np.any(vals[1:] > vals[:-1]):
+                return False
+
+    return True
+
+
+def count_inversions(grid: np.ndarray, N: int) -> int:
+    """Count the total number of violated monotonicity constraints."""
+    inv = 0
+
+    # Row inversions
+    inv += int(np.sum(grid[:, 1:]["x"] < grid[:, :-1]["x"]))
+
+    # Column inversions
+    inv += int(np.sum(grid[1:, :]["y"] < grid[:-1, :]["y"]))
+
+    if WITH_DIAG:
+
+        # Diagonal inversions
+        for d in range(-(N - 1), N):
+            rows = np.arange(N)
+            cols = rows - d
+            mask = (cols >= 0) & (cols < N)
+            r, c = rows[mask], cols[mask]
+            vals = grid[r, c]["x"] + grid[r, c]["y"]
+            inv += int(np.sum(vals[1:] < vals[:-1]))
+
+        # Anti-diagonal inversions
+        for s in range(2 * (N - 1) + 1):
+            rows = np.arange(N)
+            cols = s - rows
+            mask = (cols >= 0) & (cols < N)
+            r, c = rows[mask], cols[mask]
+            vals = grid[r, c]["x"] - grid[r, c]["y"]
+            inv += int(np.sum(vals[1:] > vals[:-1]))
+
+    return inv
+
+
+def compute_ot_loss(grid: np.ndarray, N: int) -> float:
     """
-    Gridify a 2D point cloud using the Cartesian Grid Sort algorithm.
-
-    Iteratively sorts columns by X coordinates and rows by Y coordinates
-    until convergence (disorder == 0) or until `max_iter` is reached.
-
-    Inputs:
-        xy (NDArray): 2D array of shape (N, 2) containing point (x, y) coordinates,
-                      where N = GRID * GRID.
-        max_iter (int, optional): Safety cap - maximum number of algorithm
-                                  iterations before forced termination.
-                                  Defaults to 100.
-
-    Returns:
-        Tuple[NDArray, NDArray, NDArray, NDArray]:
-            - xy: Original point cloud of shape (N, 2).
-            - k: Original flat index array of shape (N,) - natural ordering 0...N-1.
-            - XY: Gridified array of shape (GRID, GRID, 2) where XY[I, J]
-                  gives (x, y)[k].
-            - IJ: Index array of shape (GRID, GRID) mapping grid positions
-                  [I, J] back to original point indices k.
-
-    Note:
-        The algorithm is guaranteed to converge - and quickly in practice - because the 
-        following Transport Metric is a monovariant energy of the system until convergence:
-            Sum_I,J { (X[I, J] - I)^2 + (Y[I, J] - J)^2 }
+    Compute the squared L2 transport cost/energy between the grid 
+    positions and the uniform [0,1]² lattice.
     """
-    n = len(xy) #here n should be equal to GRID^2.
-    #Else apply padding with dummy +-infinite xy points.
-    k = np.arange(n)
-
-    # Initial random grid permutation IJ
-    IJ = np.random.permutation(k).reshape(GRID, GRID)
-
-    for _ in range(max_iter):
-        IJ = sort_columns(IJ, xy)
-        IJ = sort_rows(IJ, xy)
-        if disorder(IJ, xy) == 0:
-            break
-
-    # Reconstruct 2D spatial grid: shape (GRID, GRID, 2)
-    XY = xy[IJ]
-
-    # ====================
-    # Algorithmic guarantees:
-    # ====================
-
-    # Verify bijection
-    assert check_bijective(k, IJ), (
-        "Mapping is not bijective: k <-> (I, J)"
+    col_coords, row_coords = np.meshgrid(
+        np.linspace(0, 1, N),
+        np.linspace(0, 1, N),
     )
+    dx = grid["x"] - col_coords
+    dy = grid["y"] - row_coords
+    return float(np.sum(dx**2 + dy**2))
 
-    # Verify monotonicity
-    monotone_X, monotone_Y = check_monotone(XY)
-    assert monotone_X and monotone_Y, (
-        "Convergence failed: X / Y coordinates should be monotonic "
-        "along rows/columns.\n"
-        "Consider increasing max_iter."
-    )
+def main():
+    """
+    Run full cartesian grid sort on a random point cloud (65**2 points)
+    """
+    N = 65
+    MAX_ITER = 1000
+    pts = np.random.rand(N, N, 2)
+    grid = np.empty((N, N), dtype=point_dtype)
+    grid["x"] = pts[:, :, 0]
+    grid["y"] = pts[:, :, 1]
 
-    return xy, k, XY, IJ
+    # ── Optimisation loop ───────────────────────────────────────────────────
+    loss_history       = [compute_ot_loss(grid, N)]
+    inversion_history  = [count_inversions(grid, N)]
+    iteration = 0
 
+    while iteration < MAX_ITER and not is_monotone(grid, N):
+        sort_rows(grid, N)
+        sort_columns(grid, N)
+        if WITH_DIAG:
+            sort_diagonals(grid, N)
+            sort_antidiagonals(grid, N)
+
+        iteration += 1
+        loss_history.append(compute_ot_loss(grid, N))
+        inversion_history.append(count_inversions(grid, N))
+
+    # ── Results ──────────────────────────────────────────────────────────────
+    print(f"\n{'Iter':>6}  {'Inversions':>12}  {'OT Loss':>14}")
+    print("-" * 38)
+    for i, (inv, loss) in enumerate(zip(inversion_history, loss_history)):
+        print(f"{i:>6}  {inv:>12}  {loss:>14.3f}")
+
+    if inversion_history[-1] == 0:
+        print(f"successfully sorted at iteration {len(inversion_history) - 1}")
 
 if __name__ == "__main__":
-    np.random.seed(42)
-
-    n = GRID * GRID
-
-    # Generate a random point cloud
-    xy = np.random.rand(n, 2)
-
-    # Initial disorder
-    k = np.arange(n)
-    IJ = np.random.permutation(k).reshape(GRID, GRID)
-
-    print(f"Cloud shape: {xy.shape}")
-    print(f"Initial disorder: {disorder(IJ, xy)}")
-
-    # Run Cartesian Sort
-    start = time.perf_counter()
-    xy, k, XY, IJ = cartesian_sort(xy)
-    elapsed = time.perf_counter() - start
-
-    print(f"Grid shape: {XY.shape}")
-    print(f"Final disorder: {disorder(IJ, xy)}")
-    print(f"Mapping valid: {check_bijective(k, IJ)}")
-
-    print(f"Elapsed time: {elapsed:.4f} s")
+    main()
