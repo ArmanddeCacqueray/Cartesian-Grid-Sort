@@ -81,13 +81,14 @@ By construction, the transformation is a bijective assignment between the raw po
 
 ## Generalized Cartesian Sort - Diagonal improvement
 
-The axis-monotonic criterion allows to sort point cloud with a simple and fast axis based procedure. But this basic version can be enhanced with diagonal 1D sort. Diagonal (`up-left` / `down-left`) 1D sorts works exactly as the row / column 1D steps, besides that they are applyed on diagonal levels of the grid. An optimization step of the generalized cartesian algorithm is thus:
-- row sort
-- column sort
-- up-left sort
-- down left sort
+The axis-monotonic criterion allows to sort point cloud with a simple and fast axis based procedure. But this basic version can be enhanced with diagonal steps. Diagonal (`up-right` / `down-right` ) 1D sorts works exactly as the row / column 1D steps, besides that they are applyed on diagonal levels of the grid. An optimization step of the generalized cartesian algorithm is thus:
 
-The full optimization step is repeated unutil convergence. The up-left sort will make $x+y$ increasing on upleft levels (i-j = cst) and the down-left sort will make $x-y$ increasing on downleft levels. Diagonal improvement makes the overal runtime of the algorithm roughly 5 times slower, but ensures a "stronger" monotony of the resulting grid, which is not only monotonic on the natural axes of the grid, but also on the diagonals. 
+- row sort        ➡️    
+- column sort     ⬆️ 
+- up-right sort   ↗️ 
+- down-right sort ↘️ 
+
+The full optimization step is repeated unutil convergence. The up-right sort will make $x+y$ increasing on upright levels (i-j = cst) and the down-right sort will make $x-y$ increasing on downright levels. Diagonal improvement makes the overal runtime of the algorithm roughly 10 times slower, but ensures a "stronger" monotony property of the resulting grid, which is not only monotonic on the natural axes of the grid, but also on the diagonals.
 
 ## Proof of Termination & link to Optimal Transport
 
